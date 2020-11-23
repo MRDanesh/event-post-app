@@ -1,13 +1,20 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Container, AppBar, Typography, Grow, Grid} from '@material-ui/core';
+import {connect} from 'react-redux';
 
 import Posts from './Posts/Posts';
 import Form from './Form/Form';
 import memories from '../images/memories.png';
 import useStyles from './styles';
+import {getPosts} from '../actions/posts';
 
-const App = () => {
+const App = ({getPosts}) => {
     const classes = useStyles();
+
+    useEffect(() => {
+        getPosts();
+    }, [])
+
     return (
         <Container maxWidth="lg">
             <AppBar className={classes.appBar} position="static" color="inherit">
@@ -46,4 +53,4 @@ const App = () => {
     );
 };
 
-export default App;
+export default connect (null, {getPosts}) (App);

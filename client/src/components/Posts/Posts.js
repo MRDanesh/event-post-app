@@ -1,10 +1,12 @@
 import React from 'react';
+import {connect} from 'react-redux';
 
 import Post from './Post/Post';
 import useStyles from './styles';
 
-const Posts = () => {
+const Posts = ({posts}) => {
     const classes = useStyles();
+    console.log(posts);
     return (
         <>
             <h1>
@@ -16,4 +18,10 @@ const Posts = () => {
     );
 }
 
-export default Posts;
+const mapStateToProps = (state) => {
+    return {
+        posts: state.posts
+    };
+};
+
+export default connect(mapStateToProps)(Posts);
