@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import FileBase from 'react-file-base64';
 import {connect} from 'react-redux';
 
 import {TextField, Button, Typography, Paper} from '@material-ui/core';
 import useStyles from './styles';
-import {createPost} from '../../actions/posts';
+import {createPost, updatePost} from '../../actions/posts';
 
-const Form = ({createPost}) => {
+const Form = ({createPost, updatePost, currentId, setCurrentId, posts}) => {
     const classes = useStyles();
     const [postData, setPostData] = useState ({
         creator: '', 
@@ -15,12 +15,24 @@ const Form = ({createPost}) => {
         tags: '', 
         selectedFile: ''
     });
+    
+    const post = (posts) => currentId ? posts.find((p)=> p._id === currentId) : null;
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        createPost(postData);
-        console.log(postData);
+        if (currentId){
+            updatePost(currentId, postData);
+        } else {
+            createPost(postData);
+        }
     };
+
+    useEffect(()=>{
+        if(post(posts)){
+            setPostData(post(posts)); 
+        }   
+    }, [post(posts)]);
 
     const clear = () => {
 
@@ -100,6 +112,10 @@ const Form = ({createPost}) => {
     );
 }
 
+const mapStateToProps = (state) => {
+    return {
+        posts : state.posts
+    };
+};
 
-
-export default connect(null, {createPost})(Form);
+export default connect(mapStateToProps, {createPost, updatePost})(Form);
